@@ -1,0 +1,8 @@
+- insert:
+    - id: provider-probe
+      name: dsh-provider-probe
+      config:
+        timeoutMs: 20000
+        maxTokens: 8
+        maxMessageLength: 1200
+

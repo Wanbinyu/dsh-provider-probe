@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "rootDir": "src",
+    "outDir": "lib",
+    "declaration": true,
+    "rewriteRelativeImportExtensions": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "src/index.ts",
+    "src/probe.ts",
+    "src/redact.ts",
+    "src/remote.ts",
+    "src/remote-codecs.ts",
+    "src/schemas.ts",
+    "src/typert.ts",
+    "src/types.ts",
+    "src/client.ts"
+  ]
+}

@@ -29,9 +29,11 @@ export interface ProbeRequest {
     provider: string;
     model: string;
 }
+export type ProbeFailureCategory = 'credentials' | 'permission' | 'model_or_endpoint' | 'rate_limit_or_quota' | 'timeout' | 'network' | 'stream_compatibility' | 'provider_server' | 'invalid_request' | 'cancelled' | 'busy' | 'unknown';
 export interface ProbeFailure {
     code: string;
     message: string;
+    category: ProbeFailureCategory;
     status?: number;
     requestId?: string;
 }

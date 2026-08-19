@@ -17,6 +17,7 @@
   },
   "include": [
     "src/client.ts",
+    "src/failure.ts",
     "src/remote.ts",
     "src/remote-codecs.ts",
     "src/report.ts",

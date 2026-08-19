@@ -35,9 +35,25 @@ export const ProbeRequestSchema = z.object({
   model: z.string().trim().min(1).max(300),
 })
 
+export const ProbeFailureCategorySchema = z.enum([
+  'credentials',
+  'permission',
+  'model_or_endpoint',
+  'rate_limit_or_quota',
+  'timeout',
+  'network',
+  'stream_compatibility',
+  'provider_server',
+  'invalid_request',
+  'cancelled',
+  'busy',
+  'unknown',
+])
+
 export const ProbeFailureSchema = z.object({
   code: z.string(),
   message: z.string(),
+  category: ProbeFailureCategorySchema,
   status: z.number().int().optional(),
   requestId: z.string().optional(),
 })

@@ -1,3 +1,4 @@
+import { FAILURE_ADVICE_EN } from './failure.ts'
 import type { ProbeInputModality, ProbeResult } from './types.ts'
 
 function oneLine(value: string): string {
@@ -13,6 +14,7 @@ function modalityText(inputModalities: readonly ProbeInputModality[] | undefined
 export function buildDiagnosticReport(
   result: ProbeResult,
   inputModalities: readonly ProbeInputModality[] | undefined,
+  localizedFailureAdvice?: string,
 ): string {
   const lines = [
     'dsh-provider-probe diagnostic',
@@ -39,6 +41,8 @@ export function buildDiagnosticReport(
       ...result.failure.status === undefined ? [] : [`HTTP status: ${String(result.failure.status)}`],
       ...result.failure.requestId === undefined ? [] : [`Request ID: ${oneLine(result.failure.requestId)}`],
       `Message: ${oneLine(result.failure.message)}`,
+      `Failure category: ${result.failure.category}`,
+      `Suggested next step: ${oneLine(localizedFailureAdvice ?? FAILURE_ADVICE_EN[result.failure.category])}`,
     )
   }
 

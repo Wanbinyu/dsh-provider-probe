@@ -2,6 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'rea
 import {
   buildDiagnosticReport,
   type ProbeCatalog,
+  type ProbeFailureCategory,
   type ProbeInputModality,
   type ProbeRequest,
   type ProbeResult,
@@ -39,6 +40,21 @@ const FINISH_KEYS = {
   'tool-calls': 'finish.tool-calls',
   'max-tokens': 'finish.max-tokens',
 } satisfies Record<string, ProviderProbeKey>
+
+const ADVICE_KEYS = {
+  credentials: 'advice.credentials',
+  permission: 'advice.permission',
+  model_or_endpoint: 'advice.model_or_endpoint',
+  rate_limit_or_quota: 'advice.rate_limit_or_quota',
+  timeout: 'advice.timeout',
+  network: 'advice.network',
+  stream_compatibility: 'advice.stream_compatibility',
+  provider_server: 'advice.provider_server',
+  invalid_request: 'advice.invalid_request',
+  cancelled: 'advice.cancelled',
+  busy: 'advice.busy',
+  unknown: 'advice.unknown',
+} satisfies Record<ProbeFailureCategory, ProviderProbeKey>
 
 function finishLabel(reason: string, t: ProviderProbeSectionProps['t']): string {
   const key = FINISH_KEYS[reason as keyof typeof FINISH_KEYS]
@@ -137,7 +153,8 @@ export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSection
 
   const copyDiagnostic = async (): Promise<void> => {
     if (result === null) return
-    const copied = await writeClipboard(buildDiagnosticReport(result, selectedModel?.inputModalities))
+    const advice = result.status === 'failure' ? t(ADVICE_KEYS[result.failure.category]) : undefined
+    const copied = await writeClipboard(buildDiagnosticReport(result, selectedModel?.inputModalities, advice))
     setCopyState(copied ? 'copied' : 'failed')
   }
 
@@ -280,6 +297,10 @@ export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSection
           ) : (
             <>
               <p className={css.errorMessage}>{result.failure.message}</p>
+              <div className={css.nextStep}>
+                <strong>{t('nextStep')}</strong>
+                <p>{t(ADVICE_KEYS[result.failure.category])}</p>
+              </div>
               <dl className={css.metrics}>
                 <div><dt>{t('errorCode')}</dt><dd>{result.failure.code}</dd></div>
                 <div><dt>{t('total')}</dt><dd>{t('milliseconds', { value: result.totalMs })}</dd></div>

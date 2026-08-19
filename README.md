@@ -17,6 +17,7 @@
 - 默认限制为 8 个输出 token，20 秒强制超时；
 - 展示首个 token 延迟、总耗时、结束原因和实际 token 用量；
 - 保留错误码、HTTP 状态和 Request ID，并尝试移除密钥、令牌与用户目录；
+- 根据明确的状态码和错误特征区分凭据、权限、模型/地址、限流/额度、超时、网络、流兼容与供应商 5xx，并显示下一步建议；
 - 一键复制适合粘贴到 Issue/Discussion 的脱敏诊断报告；
 - 同一时间只允许一个检测，可随时取消，避免重复计费和限流；
 - 不创建会话、不写入 session log、不保存或展示模型回复。
@@ -26,7 +27,7 @@
 要求 Node.js `>=22.19` 和 DeepSeek Harness `0.1.0-rc.6` 或更高版本。
 
 ```bash
-dsh plugin --profile web add https://github.com/Wanbinyu/dsh-provider-probe/releases/download/v0.2.0/dsh-provider-probe-0.2.0.tgz
+dsh plugin --profile web add https://github.com/Wanbinyu/dsh-provider-probe/releases/download/v0.3.0/dsh-provider-probe-0.3.0.tgz
 ```
 
 安装或更新后重启：
@@ -60,6 +61,20 @@ dsh plugin --profile web remove dsh-provider-probe
 | `timeoutMs` | `20000` | 单次检测强制超时，范围 1000-120000 毫秒 |
 | `maxTokens` | `8` | 单次检测最大输出 token，范围 1-32 |
 | `maxMessageLength` | `1200` | 脱敏错误的最大字符数，范围 256-8000 |
+
+## 失败建议
+
+插件优先使用供应商返回的 HTTP 状态，其次使用明确的错误代码和常见错误文本进行分类。建议仅用于缩小排查范围，不会修改供应商配置或自动重试。
+
+| 结果 | 建议检查 |
+| --- | --- |
+| 401 / 凭据 | API Key 是否存在、有效并对应当前接口地址 |
+| 403 / 权限 | 模型授权、账号和项目权限 |
+| 404 / 模型或地址 | Base URL 与模型 ID |
+| 402、429 / 限流或额度 | 限流窗口、额度和计费状态 |
+| 超时 / 网络 | 供应商状态、DNS、代理、防火墙与 TLS |
+| 流兼容 | 当前接口的流式/SSE 格式是否符合 DSH 适配器预期 |
+| 5xx | 稍后重试，并保留 Request ID 供供应商排查 |
 
 ## 费用与隐私
 

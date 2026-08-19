@@ -2,12 +2,28 @@ import type { TypertSchema } from '@deepseek-ai/dsh-typert-protocol'
 import type {
   ProbeCatalog,
   ProbeFailure,
+  ProbeFailureCategory,
   ProbeInputModality,
   ProbeModel,
   ProbeProvider,
   ProbeRequest,
   ProbeResult,
 } from './types.ts'
+
+const FAILURE_CATEGORIES = new Set<ProbeFailureCategory>([
+  'credentials',
+  'permission',
+  'model_or_endpoint',
+  'rate_limit_or_quota',
+  'timeout',
+  'network',
+  'stream_compatibility',
+  'provider_server',
+  'invalid_request',
+  'cancelled',
+  'busy',
+  'unknown',
+])
 
 function invalid(subject: string): never {
   throw new TypeError(`provider-probe Remote rejected ${subject}`)
@@ -83,9 +99,13 @@ function failure(value: unknown, subject: string): ProbeFailure {
   const status = item.status === undefined ? undefined : finiteNumber(item.status, `${subject}.status`)
   if (status !== undefined && !Number.isInteger(status)) return invalid(`${subject}.status`)
   const requestId = optionalString(item.requestId, `${subject}.requestId`)
+  const rawCategory = string(item.category, `${subject}.category`)
+  if (!FAILURE_CATEGORIES.has(rawCategory as ProbeFailureCategory)) return invalid(`${subject}.category`)
+  const category = rawCategory as ProbeFailureCategory
   return {
     code: string(item.code, `${subject}.code`),
     message: string(item.message, `${subject}.message`),
+    category,
     ...(status === undefined ? {} : { status }),
     ...(requestId === undefined ? {} : { requestId }),
   }

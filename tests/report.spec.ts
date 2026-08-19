@@ -35,16 +35,35 @@ describe('buildDiagnosticReport', () => {
       totalMs: 20,
       failure: {
         code: 'AUTH',
+        category: 'credentials',
         status: 401,
         requestId: 'req-123',
         message: 'Authorization: <redacted>\nPath: <home>',
       },
-    }, undefined)
+    }, undefined, '检查 API Key。')
 
     expect(report).toContain('Provider: gateway ignored\n')
     expect(report).toContain('Declared input modalities: unknown\n')
     expect(report).toContain('HTTP status: 401\n')
     expect(report).toContain('Request ID: req-123\n')
     expect(report).toContain('Message: Authorization: <redacted> Path: <home>\n')
+    expect(report).toContain('Failure category: credentials\n')
+    expect(report).toContain('Suggested next step: 检查 API Key。\n')
+  })
+
+  it('uses stable English advice when no localized text is supplied', () => {
+    const report = buildDiagnosticReport({
+      status: 'failure',
+      provider: 'local',
+      model: 'model',
+      totalMs: 50,
+      failure: {
+        code: 'INCOMPLETE_STREAM',
+        category: 'stream_compatibility',
+        message: 'Provider stream ended without a finish event',
+      },
+    }, ['text'])
+
+    expect(report).toContain('Suggested next step: Check that the endpoint returns the streaming or SSE format')
   })
 })

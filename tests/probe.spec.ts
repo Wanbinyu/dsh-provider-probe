@@ -78,6 +78,7 @@ describe('ProbeRunner', () => {
     expect(result.status).toBe('failure')
     if (result.status !== 'failure') return
     expect(result.failure).toMatchObject({ code: 'AUTH', status: 401, requestId: 'req-123' })
+    expect(result.failure.category).toBe('credentials')
     expect(result.failure.message).toContain('Authorization: <redacted>')
     expect(result.failure.message).toContain('<home>')
     expect(result.failure.message).not.toContain('sk-1234567890abcdef')
@@ -104,6 +105,7 @@ describe('ProbeRunner', () => {
     expect(result.status).toBe('failure')
     if (result.status !== 'failure') return
     expect(result.failure.code).toBe('TIMEOUT')
+    expect(result.failure.category).toBe('timeout')
     expect(result.totalMs).toBeGreaterThanOrEqual(0)
   })
 
@@ -130,7 +132,7 @@ describe('ProbeRunner', () => {
       new AbortController().signal,
     )
 
-    expect(second).toMatchObject({ status: 'failure', failure: { code: 'BUSY' } })
+    expect(second).toMatchObject({ status: 'failure', failure: { code: 'BUSY', category: 'busy' } })
     expect(calls).toBe(1)
     firstController.abort()
     await expect(first).resolves.toMatchObject({ status: 'failure', failure: { code: 'CANCELLED' } })

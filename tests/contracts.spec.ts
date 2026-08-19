@@ -32,15 +32,27 @@ describe('Remote contracts', () => {
       provider: 'deepseek',
       model: 'deepseek-chat',
       totalMs: 250,
-      failure: { code: 'AUTH', message: 'Unauthorized', status: 401 },
+      failure: { code: 'AUTH', category: 'credentials', message: 'Unauthorized', status: 401 },
     }).success).toBe(true)
     expect(ProbeResultCodec.parse({
       status: 'failure',
       provider: 'deepseek',
       model: 'deepseek-chat',
       totalMs: 250,
-      failure: { code: 'AUTH', message: 'Unauthorized', status: 401 },
+      failure: { code: 'AUTH', category: 'credentials', message: 'Unauthorized', status: 401 },
     })).toMatchObject({ status: 'failure', failure: { code: 'AUTH' } })
+  })
+
+  it('rejects an unknown failure category at both contract boundaries', () => {
+    const result = {
+      status: 'failure',
+      provider: 'deepseek',
+      model: 'deepseek-chat',
+      totalMs: 250,
+      failure: { code: 'AUTH', category: 'made-up', message: 'Unauthorized', status: 401 },
+    }
+    expect(ProbeResultSchema.safeParse(result).success).toBe(false)
+    expect(() => ProbeResultCodec.parse(result)).toThrow(/category/)
   })
 
   it('carries only the supported declared input modalities', () => {

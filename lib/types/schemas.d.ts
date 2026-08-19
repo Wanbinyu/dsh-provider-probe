@@ -53,9 +53,37 @@ export declare const ProbeRequestSchema: z.ZodObject<{
     provider: z.ZodString;
     model: z.ZodString;
 }, z.core.$strip>;
+export declare const ProbeFailureCategorySchema: z.ZodEnum<{
+    credentials: "credentials";
+    permission: "permission";
+    model_or_endpoint: "model_or_endpoint";
+    rate_limit_or_quota: "rate_limit_or_quota";
+    timeout: "timeout";
+    network: "network";
+    stream_compatibility: "stream_compatibility";
+    provider_server: "provider_server";
+    invalid_request: "invalid_request";
+    cancelled: "cancelled";
+    busy: "busy";
+    unknown: "unknown";
+}>;
 export declare const ProbeFailureSchema: z.ZodObject<{
     code: z.ZodString;
     message: z.ZodString;
+    category: z.ZodEnum<{
+        credentials: "credentials";
+        permission: "permission";
+        model_or_endpoint: "model_or_endpoint";
+        rate_limit_or_quota: "rate_limit_or_quota";
+        timeout: "timeout";
+        network: "network";
+        stream_compatibility: "stream_compatibility";
+        provider_server: "provider_server";
+        invalid_request: "invalid_request";
+        cancelled: "cancelled";
+        busy: "busy";
+        unknown: "unknown";
+    }>;
     status: z.ZodOptional<z.ZodNumber>;
     requestId: z.ZodOptional<z.ZodString>;
 }, z.core.$strip>;
@@ -81,6 +109,20 @@ export declare const ProbeResultSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
     failure: z.ZodObject<{
         code: z.ZodString;
         message: z.ZodString;
+        category: z.ZodEnum<{
+            credentials: "credentials";
+            permission: "permission";
+            model_or_endpoint: "model_or_endpoint";
+            rate_limit_or_quota: "rate_limit_or_quota";
+            timeout: "timeout";
+            network: "network";
+            stream_compatibility: "stream_compatibility";
+            provider_server: "provider_server";
+            invalid_request: "invalid_request";
+            cancelled: "cancelled";
+            busy: "busy";
+            unknown: "unknown";
+        }>;
         status: z.ZodOptional<z.ZodNumber>;
         requestId: z.ZodOptional<z.ZodString>;
     }, z.core.$strip>;

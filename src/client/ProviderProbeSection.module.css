@@ -19,8 +19,9 @@
 .catalogWarning,
 .costNotice,
 .running,
-.transportError,
-.errorMessage {
+  .transportError,
+  .errorMessage,
+  .nextStep p {
   margin: 0;
 }
 
@@ -373,6 +374,28 @@
   font-size: 12px;
   line-height: 18px;
   white-space: pre-wrap;
+}
+
+.nextStep {
+  border-bottom: 1px solid var(--dsw-alias-border-l2);
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--dsw-alias-state-warn-label) 7%, transparent);
+}
+
+.nextStep strong {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--dsw-alias-label-primary);
+  font-size: 11px;
+  line-height: 17px;
+  font-weight: 600;
+}
+
+.nextStep p {
+  overflow-wrap: anywhere;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 12px;
+  line-height: 18px;
 }
 
 @media (max-width: 620px) {

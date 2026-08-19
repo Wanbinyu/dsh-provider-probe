@@ -85,6 +85,20 @@ export declare const TYPERT: {
                 failure: import("zod").ZodObject<{
                     code: import("zod").ZodString;
                     message: import("zod").ZodString;
+                    category: import("zod").ZodEnum<{
+                        credentials: "credentials";
+                        permission: "permission";
+                        model_or_endpoint: "model_or_endpoint";
+                        rate_limit_or_quota: "rate_limit_or_quota";
+                        timeout: "timeout";
+                        network: "network";
+                        stream_compatibility: "stream_compatibility";
+                        provider_server: "provider_server";
+                        invalid_request: "invalid_request";
+                        cancelled: "cancelled";
+                        busy: "busy";
+                        unknown: "unknown";
+                    }>;
                     status: import("zod").ZodOptional<import("zod").ZodNumber>;
                     requestId: import("zod").ZodOptional<import("zod").ZodString>;
                 }, import("zod/v4/core").$strip>;

@@ -16,6 +16,7 @@
   },
   "include": [
     "src/index.ts",
+    "src/failure.ts",
     "src/probe.ts",
     "src/report.ts",
     "src/redact.ts",

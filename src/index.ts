@@ -7,6 +7,7 @@ import type { ProbeCatalog, ProbeRequest, ProbeResult, ProviderProbeConfig } fro
 
 export type * from './types.ts'
 export { ProbeRunner } from './probe.ts'
+export { classifyProbeFailure, FAILURE_ADVICE_EN } from './failure.ts'
 export { redactMessage } from './redact.ts'
 export { buildDiagnosticReport } from './report.ts'
 

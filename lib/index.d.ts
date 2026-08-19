@@ -4,6 +4,7 @@ import { TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol';
 import type { ProbeCatalog, ProbeRequest, ProbeResult, ProviderProbeConfig } from './types.ts';
 export type * from './types.ts';
 export { ProbeRunner } from './probe.ts';
+export { classifyProbeFailure, FAILURE_ADVICE_EN } from './failure.ts';
 export { redactMessage } from './redact.ts';
 export { buildDiagnosticReport } from './report.ts';
 export declare const name = "provider-probe";

@@ -6,6 +6,7 @@ import {
   type StreamChunk,
   type TokenUsage,
 } from '@deepseek-ai/dsh-llm'
+import { classifyProbeFailure } from './failure.ts'
 import { redactMessage } from './redact.ts'
 import type {
   ProbeCatalog,
@@ -54,12 +55,18 @@ function normalizeFailure(error: unknown, maxLength: number): ProbeFailure {
   const requestId = typeof value?.requestId === 'string' && value.requestId.length > 0
     ? value.requestId
     : undefined
-  return {
+  const failure = {
     code,
     message: redactMessage(rawMessage, maxLength) || 'Provider request failed',
     ...(status === undefined ? {} : { status }),
     ...(requestId === undefined ? {} : { requestId }),
   }
+  return { ...failure, category: classifyProbeFailure(failure) }
+}
+
+function knownFailure(code: string, message: string): ProbeFailure {
+  const failure = { code, message }
+  return { ...failure, category: classifyProbeFailure(failure) }
 }
 
 function failureResult(
@@ -146,14 +153,12 @@ export class ProbeRunner {
     const normalized = { provider: request.provider.trim(), model: request.model.trim() }
     if (normalized.provider.length === 0 || normalized.model.length === 0) {
       return failureResult(normalized, 0, {
-        code: 'INVALID_REQUEST',
-        message: 'Provider and model are required',
+        ...knownFailure('INVALID_REQUEST', 'Provider and model are required'),
       })
     }
     if (this.active) {
       return failureResult(normalized, 0, {
-        code: 'BUSY',
-        message: 'Another provider probe is already running',
+        ...knownFailure('BUSY', 'Another provider probe is already running'),
       })
     }
 
@@ -200,13 +205,12 @@ export class ProbeRunner {
       const totalMs = elapsed(this.now, startedAt)
       if (finish === undefined) {
         return failureResult(normalized, totalMs, {
-          code: 'INCOMPLETE_STREAM',
-          message: 'Provider stream ended without a finish event',
+          ...knownFailure('INCOMPLETE_STREAM', 'Provider stream ended without a finish event'),
         })
       }
       if (finish.reason.kind === 'error' || finish.reason.kind === 'aborted') {
         const failure = timedOut
-          ? { code: 'TIMEOUT', message: `Provider did not finish within ${String(this.config.timeoutMs)} ms` }
+          ? knownFailure('TIMEOUT', `Provider did not finish within ${String(this.config.timeoutMs)} ms`)
           : normalizeFailure(finish.reason.failure satisfies LlmFailure, this.config.maxMessageLength)
         return failureResult(normalized, totalMs, failure)
       }
@@ -223,14 +227,12 @@ export class ProbeRunner {
       const totalMs = elapsed(this.now, startedAt)
       if (timedOut) {
         return failureResult(normalized, totalMs, {
-          code: 'TIMEOUT',
-          message: `Provider did not finish within ${String(this.config.timeoutMs)} ms`,
+          ...knownFailure('TIMEOUT', `Provider did not finish within ${String(this.config.timeoutMs)} ms`),
         })
       }
       if (callerSignal.aborted) {
         return failureResult(normalized, totalMs, {
-          code: 'CANCELLED',
-          message: 'Provider probe was cancelled',
+          ...knownFailure('CANCELLED', 'Provider probe was cancelled'),
         })
       }
       return failureResult(normalized, totalMs, normalizeFailure(error, this.config.maxMessageLength))

@@ -145,15 +145,19 @@ describe('ProbeRunner', () => {
       listModels: async (provider: string) => {
         if (provider === 'broken') throw new Error('apiKey=top-secret catalog failed')
         return [
-          { provider, id: 'model-a', name: 'Model A' },
+          { provider, id: 'model-a', name: 'Model A', inputModalities: ['image', 'text', 'image'] as const },
           { provider, id: 'model-a', name: 'Duplicate' },
+          { provider, id: 'model-b', name: 'Model B' },
         ]
       },
     }
 
     const catalog = await runner(llm).catalog()
 
-    expect(catalog.providers[0]?.models).toEqual([{ id: 'model-a', name: 'Model A' }])
+    expect(catalog.providers[0]?.models).toEqual([
+      { id: 'model-a', name: 'Model A', inputModalities: ['text', 'image'] },
+      { id: 'model-b', name: 'Model B' },
+    ])
     expect(catalog.providers[1]).toMatchObject({
       id: 'broken',
       models: [],
@@ -162,4 +166,3 @@ describe('ProbeRunner', () => {
     expect(catalog.limits).toEqual({ timeoutMs: 1000, maxTokens: 8 })
   })
 })
-

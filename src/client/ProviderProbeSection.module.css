@@ -58,6 +58,7 @@
 .iconButton:focus-visible,
 .primaryButton:focus-visible,
 .secondaryButton:focus-visible,
+.copyButton:focus-visible,
 .loadFailure button:focus-visible,
 .field select:focus-visible,
 .field input:focus-visible {
@@ -144,6 +145,44 @@
 
 .field input::placeholder {
   color: var(--dsw-alias-label-dimmed);
+}
+
+.capabilities {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.capabilityLabel {
+  font-weight: 500;
+}
+
+.capabilityBadges {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.capabilityBadge {
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 4px;
+  padding: 1px 6px;
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-primary);
+  line-height: 16px;
+}
+
+.capabilityBadge[data-known='false'] {
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.capabilityNotice {
+  color: var(--dsw-alias-label-tertiary);
 }
 
 .catalogWarning,
@@ -259,6 +298,46 @@
   white-space: nowrap;
 }
 
+.resultTools {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.copyButton {
+  box-sizing: border-box;
+  display: inline-flex;
+  min-height: 28px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 6px;
+  padding: 3px 8px;
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  font: inherit;
+  font-size: 11px;
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.copyButton:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.copyButton[data-state='copied'] {
+  color: var(--dsw-alias-state-success-primary);
+}
+
+.copyButton[data-state='failed'] {
+  color: var(--dsw-alias-state-error-primary);
+}
+
 .metrics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -312,5 +391,10 @@
     white-space: normal;
     overflow-wrap: anywhere;
   }
-}
 
+  .resultTools {
+    width: 100%;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

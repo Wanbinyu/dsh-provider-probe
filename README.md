@@ -11,11 +11,13 @@
 ## 功能
 
 - 自动列出当前活动的供应商路由和适配器模型目录；
+- 显示活动模型路由声明的文本、图片或未知输入能力；
 - 支持手动输入未出现在目录中的模型 ID；
 - 只在用户点击“开始检测”后发送请求，不做后台轮询；
 - 默认限制为 8 个输出 token，20 秒强制超时；
 - 展示首个 token 延迟、总耗时、结束原因和实际 token 用量；
 - 保留错误码、HTTP 状态和 Request ID，并尝试移除密钥、令牌与用户目录；
+- 一键复制适合粘贴到 Issue/Discussion 的脱敏诊断报告；
 - 同一时间只允许一个检测，可随时取消，避免重复计费和限流；
 - 不创建会话、不写入 session log、不保存或展示模型回复。
 
@@ -24,7 +26,7 @@
 要求 Node.js `>=22.19` 和 DeepSeek Harness `0.1.0-rc.6` 或更高版本。
 
 ```bash
-dsh plugin --profile web add https://github.com/Wanbinyu/dsh-provider-probe/releases/download/v0.1.0/dsh-provider-probe-0.1.0.tgz
+dsh plugin --profile web add https://github.com/Wanbinyu/dsh-provider-probe/releases/download/v0.2.0/dsh-provider-probe-0.2.0.tgz
 ```
 
 安装或更新后重启：
@@ -63,6 +65,8 @@ dsh plugin --profile web remove dsh-provider-probe
 
 检测请求会经过 DSH 的正常适配器和用户已经保存的供应商配置，因此可能产生少量模型费用。插件不会读取或返回 API Key；凭据仍由适配器按正常路径解析。模型输出会被丢弃，只保留时延、用量和终止状态。
 
+输入能力来自 DSH 当前模型路由的声明，不会额外发送图片进行验证，因此不增加附件、网络请求或费用。复制的诊断报告只使用页面已经显示的路由、能力、时延、用量和脱敏错误；发布前仍应人工检查。
+
 错误脱敏属于纵深防御，无法保证覆盖每个供应商自定义的敏感格式。公开错误信息前仍应人工检查。
 
 ## 开发
@@ -72,7 +76,7 @@ npm install
 npm run verify
 ```
 
-`verify` 会执行 Host/Web 类型检查、单元测试、客户端构建和安装包内容检查。浏览器端使用轻量边界解析器，当前主包约 28 KB，避免为两个 Remote 方法重复打入完整 Zod。
+`verify` 会执行 Host/Web 类型检查、单元测试、客户端构建和安装包内容检查。浏览器端使用轻量边界解析器，避免为两个 Remote 方法重复打入完整 Zod。
 
 ## 反馈
 
@@ -81,4 +85,3 @@ npm run verify
 ## 许可证
 
 [MIT](LICENSE)
-

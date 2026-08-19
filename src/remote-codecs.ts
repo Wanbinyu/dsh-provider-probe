@@ -2,6 +2,7 @@ import type { TypertSchema } from '@deepseek-ai/dsh-typert-protocol'
 import type {
   ProbeCatalog,
   ProbeFailure,
+  ProbeInputModality,
   ProbeModel,
   ProbeProvider,
   ProbeRequest,
@@ -43,13 +44,25 @@ function optionalString(value: unknown, subject: string): string | undefined {
   return value === undefined ? undefined : string(value, subject)
 }
 
+function optionalModalities(value: unknown, subject: string): readonly ProbeInputModality[] | undefined {
+  if (value === undefined) return undefined
+  if (!Array.isArray(value)) return invalid(subject)
+  return value.map((entry, index) => {
+    const parsed = string(entry, `${subject}[${String(index)}]`)
+    if (parsed !== 'text' && parsed !== 'image') return invalid(`${subject}[${String(index)}]`)
+    return parsed
+  })
+}
+
 function model(value: unknown, subject: string): ProbeModel {
   const item = record(value, subject)
   const description = optionalString(item.description, `${subject}.description`)
+  const inputModalities = optionalModalities(item.inputModalities, `${subject}.inputModalities`)
   return {
     id: string(item.id, `${subject}.id`),
     name: string(item.name, `${subject}.name`),
     ...(description === undefined ? {} : { description }),
+    ...(inputModalities === undefined ? {} : { inputModalities }),
   }
 }
 
@@ -147,4 +160,3 @@ export const ProbeResultCodec: TypertSchema<ProbeResult> = {
     }
   },
 }
-

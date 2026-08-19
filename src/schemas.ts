@@ -12,6 +12,7 @@ export const ProbeModelSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().optional(),
+  inputModalities: z.array(z.enum(['text', 'image'])).optional(),
 })
 
 export const ProbeProviderSchema = z.object({
@@ -59,4 +60,3 @@ export const ProbeResultSchema = z.discriminatedUnion('status', [
     failure: ProbeFailureSchema,
   }),
 ])
-

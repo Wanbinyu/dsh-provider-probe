@@ -17,6 +17,7 @@
   "include": [
     "src/index.ts",
     "src/probe.ts",
+    "src/report.ts",
     "src/redact.ts",
     "src/remote.ts",
     "src/remote-codecs.ts",

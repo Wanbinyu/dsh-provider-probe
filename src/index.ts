@@ -8,6 +8,7 @@ import type { ProbeCatalog, ProbeRequest, ProbeResult, ProviderProbeConfig } fro
 export type * from './types.ts'
 export { ProbeRunner } from './probe.ts'
 export { redactMessage } from './redact.ts'
+export { buildDiagnosticReport } from './report.ts'
 
 export const name = 'provider-probe'
 export const inject = ['llm']
@@ -46,4 +47,3 @@ export function apply(
   if (!Number.isInteger(config.maxMessageLength)) throw new Error('ProviderProbeConfig: maxMessageLength must be an integer')
   new ProviderProbeGateway(ctx, config)
 }
-

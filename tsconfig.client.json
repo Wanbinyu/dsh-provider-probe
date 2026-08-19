@@ -19,6 +19,7 @@
     "src/client.ts",
     "src/remote.ts",
     "src/remote-codecs.ts",
+    "src/report.ts",
     "src/schemas.ts",
     "src/types.ts",
     "src/client/**/*"

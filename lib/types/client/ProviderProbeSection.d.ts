@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import type { ProbeCatalog, ProbeRequest, ProbeResult } from '../client.ts';
+import { type ProbeCatalog, type ProbeRequest, type ProbeResult } from '../client.ts';
 import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots';
 export interface ProviderProbeSectionInjected {
     catalog: () => Promise<ProbeCatalog>;

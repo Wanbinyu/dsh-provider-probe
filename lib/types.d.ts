@@ -4,10 +4,13 @@ export interface ProviderProbeConfig {
     maxTokens: number;
     maxMessageLength: number;
 }
+export type ProbeInputModality = 'text' | 'image';
 export interface ProbeModel {
     id: string;
     name: string;
     description?: string;
+    /** Effective input modalities declared by the active DSH model route. */
+    inputModalities?: readonly ProbeInputModality[];
 }
 export interface ProbeProvider {
     id: string;

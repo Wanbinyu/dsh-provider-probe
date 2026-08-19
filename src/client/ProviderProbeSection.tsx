@@ -1,10 +1,19 @@
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
-import type { ProbeCatalog, ProbeRequest, ProbeResult } from '../client.ts'
 import {
+  buildDiagnosticReport,
+  type ProbeCatalog,
+  type ProbeInputModality,
+  type ProbeRequest,
+  type ProbeResult,
+} from '../client.ts'
+import {
+  IconCheckOutline16,
+  IconCopyOutline16,
   IconPlayOutline16,
   IconRefreshOutline16,
   IconStopFill16,
   Tooltip,
+  writeClipboard,
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
 import type { ProviderProbeKey } from './locales.ts'
@@ -36,6 +45,10 @@ function finishLabel(reason: string, t: ProviderProbeSectionProps['t']): string 
   return key === undefined ? reason : t(key)
 }
 
+function modalityKey(modality: ProbeInputModality): ProviderProbeKey {
+  return modality === 'text' ? 'capability.text' : 'capability.image'
+}
+
 export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSectionProps): ReactNode {
   const modelListId = useId()
   const abortRef = useRef<AbortController | null>(null)
@@ -46,6 +59,7 @@ export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSection
   const [running, setRunning] = useState(false)
   const [result, setResult] = useState<ProbeResult | null>(null)
   const [transportError, setTransportError] = useState(false)
+  const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle')
 
   useEffect(() => {
     let current = true
@@ -60,6 +74,10 @@ export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSection
   const selectedProvider = useMemo(
     () => providers.find(entry => entry.id === provider),
     [provider, providers],
+  )
+  const selectedModel = useMemo(
+    () => selectedProvider?.models.find(entry => entry.id === model.trim()),
+    [model, selectedProvider],
   )
 
   useEffect(() => {
@@ -81,6 +99,7 @@ export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSection
     setCatalogState({ status: 'loading' })
     setResult(null)
     setTransportError(false)
+    setCopyState('idle')
     setRequestRevision(value => value + 1)
   }
 
@@ -90,6 +109,7 @@ export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSection
     setModel(entry?.models[0]?.id ?? '')
     setResult(null)
     setTransportError(false)
+    setCopyState('idle')
   }
 
   const run = async (): Promise<void> => {
@@ -100,6 +120,7 @@ export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSection
     setRunning(true)
     setResult(null)
     setTransportError(false)
+    setCopyState('idle')
     try {
       setResult(await probe({ provider, model: normalizedModel }, controller.signal))
     } catch {
@@ -113,6 +134,12 @@ export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSection
   const limits = catalogState.status === 'ready'
     ? catalogState.value.limits
     : { maxTokens: 8, timeoutMs: 20000 }
+
+  const copyDiagnostic = async (): Promise<void> => {
+    if (result === null) return
+    const copied = await writeClipboard(buildDiagnosticReport(result, selectedModel?.inputModalities))
+    setCopyState(copied ? 'copied' : 'failed')
+  }
 
   return (
     <section className={css.section} data-provider-probe aria-busy={catalogState.status === 'loading' || running}>
@@ -159,12 +186,33 @@ export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSection
                 disabled={running}
                 placeholder={t('modelPlaceholder')}
                 autoComplete="off"
-                onChange={event => { setModel(event.currentTarget.value); setResult(null); setTransportError(false) }}
+                onChange={event => {
+                  setModel(event.currentTarget.value)
+                  setResult(null)
+                  setTransportError(false)
+                  setCopyState('idle')
+                }}
               />
               <datalist id={modelListId}>
                 {selectedProvider?.models.map(entry => <option value={entry.id} key={entry.id}>{entry.name}</option>)}
               </datalist>
             </label>
+          </div>
+
+          <div className={css.capabilities}>
+            <span className={css.capabilityLabel}>{t('declaredCapabilities')}</span>
+            <span className={css.capabilityBadges}>
+              {selectedModel?.inputModalities === undefined ? (
+                <span className={css.capabilityBadge} data-known="false">{t('capability.unknown')}</span>
+              ) : selectedModel.inputModalities.length === 0 ? (
+                <span className={css.capabilityBadge} data-known="false">{t('capability.none')}</span>
+              ) : selectedModel.inputModalities.map(modality => (
+                <span className={css.capabilityBadge} data-known="true" key={modality}>
+                  {t(modalityKey(modality))}
+                </span>
+              ))}
+            </span>
+            <span className={css.capabilityNotice}>{t('capability.notice')}</span>
           </div>
 
           {selectedProvider?.modelListError !== undefined ? (
@@ -205,7 +253,22 @@ export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSection
         <div className={css.result} data-status={result.status} role={result.status === 'failure' ? 'alert' : 'status'}>
           <div className={css.resultHeading}>
             <strong>{t(result.status === 'success' ? 'success' : 'failure')}</strong>
-            <code>{result.provider}/{result.model}</code>
+            <div className={css.resultTools}>
+              <code>{result.provider}/{result.model}</code>
+              <button
+                type="button"
+                className={css.copyButton}
+                data-state={copyState}
+                onClick={() => { void copyDiagnostic() }}
+              >
+                {copyState === 'copied'
+                  ? <IconCheckOutline16 size={16} aria-hidden="true" />
+                  : <IconCopyOutline16 size={16} aria-hidden="true" />}
+                {t(copyState === 'copied'
+                  ? 'copied'
+                  : copyState === 'failed' ? 'copyFailed' : 'copyDiagnostic')}
+              </button>
+            </div>
           </div>
           {result.status === 'success' ? (
             <dl className={css.metrics}>
@@ -230,4 +293,3 @@ export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSection
     </section>
   )
 }
-

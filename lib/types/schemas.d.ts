@@ -10,6 +10,10 @@ export declare const ProbeModelSchema: z.ZodObject<{
     id: z.ZodString;
     name: z.ZodString;
     description: z.ZodOptional<z.ZodString>;
+    inputModalities: z.ZodOptional<z.ZodArray<z.ZodEnum<{
+        text: "text";
+        image: "image";
+    }>>>;
 }, z.core.$strip>;
 export declare const ProbeProviderSchema: z.ZodObject<{
     id: z.ZodString;
@@ -18,6 +22,10 @@ export declare const ProbeProviderSchema: z.ZodObject<{
         id: z.ZodString;
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
+        inputModalities: z.ZodOptional<z.ZodArray<z.ZodEnum<{
+            text: "text";
+            image: "image";
+        }>>>;
     }, z.core.$strip>>;
     modelListError: z.ZodOptional<z.ZodString>;
 }, z.core.$strip>;
@@ -29,6 +37,10 @@ export declare const ProbeCatalogSchema: z.ZodObject<{
             id: z.ZodString;
             name: z.ZodString;
             description: z.ZodOptional<z.ZodString>;
+            inputModalities: z.ZodOptional<z.ZodArray<z.ZodEnum<{
+                text: "text";
+                image: "image";
+            }>>>;
         }, z.core.$strip>>;
         modelListError: z.ZodOptional<z.ZodString>;
     }, z.core.$strip>>;

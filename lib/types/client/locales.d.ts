@@ -4,6 +4,12 @@ export declare const zh: {
     title: string;
     provider: string;
     model: string;
+    declaredCapabilities: string;
+    'capability.text': string;
+    'capability.image': string;
+    'capability.unknown': string;
+    'capability.none': string;
+    'capability.notice': string;
     chooseProvider: string;
     modelPlaceholder: string;
     loading: string;
@@ -27,6 +33,9 @@ export declare const zh: {
     errorCode: string;
     httpStatus: string;
     requestId: string;
+    copyDiagnostic: string;
+    copied: string;
+    copyFailed: string;
     notAvailable: string;
     milliseconds: string;
     tokens: string;
@@ -41,6 +50,12 @@ export declare const en: {
     title: string;
     provider: string;
     model: string;
+    declaredCapabilities: string;
+    'capability.text': string;
+    'capability.image': string;
+    'capability.unknown': string;
+    'capability.none': string;
+    'capability.notice': string;
     chooseProvider: string;
     modelPlaceholder: string;
     loading: string;
@@ -64,6 +79,9 @@ export declare const en: {
     errorCode: string;
     httpStatus: string;
     requestId: string;
+    copyDiagnostic: string;
+    copied: string;
+    copyFailed: string;
     notAvailable: string;
     milliseconds: string;
     tokens: string;

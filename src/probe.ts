@@ -11,6 +11,7 @@ import type {
   ProbeCatalog,
   ProbeFailure,
   ProbeFailureResult,
+  ProbeInputModality,
   ProbeProvider,
   ProbeRequest,
   ProbeResult,
@@ -18,6 +19,12 @@ import type {
 } from './types.ts'
 
 type LlmPort = Pick<LlmRuntime, 'listModels' | 'listProviders' | 'stream'>
+
+function probeModalities(value: readonly string[] | undefined): readonly ProbeInputModality[] | undefined {
+  if (value === undefined) return undefined
+  const declared = new Set(value)
+  return (['text', 'image'] as const).filter(entry => declared.has(entry))
+}
 
 function elapsed(now: () => number, startedAt: number): number {
   return Math.max(0, Math.round(now() - startedAt))
@@ -108,10 +115,12 @@ export class ProbeRunner {
         const models = discovered.flatMap((model) => {
           if (seen.has(model.id)) return []
           seen.add(model.id)
+          const inputModalities = probeModalities(model.inputModalities)
           return [{
             id: model.id,
             name: model.name,
             ...(model.description === undefined ? {} : { description: model.description }),
+            ...(inputModalities === undefined ? {} : { inputModalities }),
           }]
         })
         return { id: provider.id, name: provider.name, models }
@@ -232,4 +241,3 @@ export class ProbeRunner {
     }
   }
 }
-

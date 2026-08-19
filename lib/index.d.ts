@@ -5,6 +5,7 @@ import type { ProbeCatalog, ProbeRequest, ProbeResult, ProviderProbeConfig } fro
 export type * from './types.ts';
 export { ProbeRunner } from './probe.ts';
 export { redactMessage } from './redact.ts';
+export { buildDiagnosticReport } from './report.ts';
 export declare const name = "provider-probe";
 export declare const inject: string[];
 export declare const Config: z<ProviderProbeConfig>;

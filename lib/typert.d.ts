@@ -22,6 +22,10 @@ export declare const TYPERT: {
                         id: import("zod").ZodString;
                         name: import("zod").ZodString;
                         description: import("zod").ZodOptional<import("zod").ZodString>;
+                        inputModalities: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodEnum<{
+                            text: "text";
+                            image: "image";
+                        }>>>;
                     }, import("zod/v4/core").$strip>>;
                     modelListError: import("zod").ZodOptional<import("zod").ZodString>;
                 }, import("zod/v4/core").$strip>>;

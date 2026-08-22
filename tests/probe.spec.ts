@@ -167,4 +167,25 @@ describe('ProbeRunner', () => {
     })
     expect(catalog.limits).toEqual({ timeoutMs: 1000, maxTokens: 8 })
   })
+
+  it('finishes the catalog when one provider model list never settles', async () => {
+    const llm = {
+      listProviders: () => [
+        { id: 'healthy', name: 'Healthy' },
+        { id: 'stalled', name: 'Stalled' },
+      ],
+      listModels: async (provider: string) => provider === 'stalled'
+        ? await new Promise<never>(() => undefined)
+        : [{ provider, id: 'model-a', name: 'Model A' }],
+    }
+
+    const catalog = await runner(llm, undefined, { timeoutMs: 20 }).catalog()
+
+    expect(catalog.providers[0]?.models).toEqual([{ id: 'model-a', name: 'Model A' }])
+    expect(catalog.providers[1]).toMatchObject({
+      id: 'stalled',
+      models: [],
+      modelListError: 'Model catalog did not respond within 20 ms',
+    })
+  })
 })

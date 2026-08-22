@@ -31,6 +31,20 @@ function elapsed(now: () => number, startedAt: number): number {
   return Math.max(0, Math.round(now() - startedAt))
 }
 
+async function withTimeout<T>(operation: Promise<T>, timeoutMs: number, message: string): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined
+  try {
+    return await Promise.race([
+      operation,
+      new Promise<never>((_resolve, reject) => {
+        timer = setTimeout(() => { reject(new Error(message)) }, timeoutMs)
+      }),
+    ])
+  } finally {
+    if (timer !== undefined) clearTimeout(timer)
+  }
+}
+
 function asRecord(value: unknown): Record<string, unknown> | undefined {
   return typeof value === 'object' && value !== null ? value as Record<string, unknown> : undefined
 }
@@ -117,7 +131,11 @@ export class ProbeRunner {
     const providers = this.llm.listProviders()
     const entries = await Promise.all(providers.map(async (provider): Promise<ProbeProvider> => {
       try {
-        const discovered = await this.llm.listModels(provider.id)
+        const discovered = await withTimeout(
+          this.llm.listModels(provider.id),
+          this.config.timeoutMs,
+          `Model catalog did not respond within ${String(this.config.timeoutMs)} ms`,
+        )
         const seen = new Set<string>()
         const models = discovered.flatMap((model) => {
           if (seen.has(model.id)) return []

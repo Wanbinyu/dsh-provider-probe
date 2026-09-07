@@ -1,6 +1,5 @@
 import {
   createUserMessage,
-  isTokenDelta,
   type LlmFailure,
   type LlmRuntime,
   type StreamChunk,
@@ -212,7 +211,7 @@ export class ProbeRunner {
         const step = await nextWithSignal(iterator, signal)
         if (step.done) break
         const chunk = step.value
-        if (firstTokenMs === null && isTokenDelta(chunk)) firstTokenMs = elapsed(this.now, startedAt)
+        if (firstTokenMs === null && chunk.type === 'text-delta') firstTokenMs = elapsed(this.now, startedAt)
         if (chunk.type === 'usage') usage = chunk.usage
         if (chunk.type === 'finish') {
           finish = chunk

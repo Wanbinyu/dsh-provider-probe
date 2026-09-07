@@ -25,10 +25,10 @@ Manual, low-cost model-provider connectivity checks for DeepSeek Harness Web. It
 ## Install
 
 Requires Node.js `>=22.19` and DeepSeek Harness `0.1.0-rc.6` or later.
-`v0.3.4` is type-checked, tested, built, and package-validated against DeepSeek Harness `0.1.2-rc.1` while retaining compatibility with `0.1.0-rc.6` through `rc.8` and `0.1.1-rc.1` through `rc.2`. Each provider model-list request has an independent timeout, so one stalled endpoint cannot block the whole catalog.
+`v0.3.5` is type-checked, tested, built, and package-validated against DeepSeek Harness `0.1.2-rc.1` while retaining compatibility with `0.1.0-rc.6` through `rc.8` and `0.1.1-rc.1` through `rc.2`. Each provider model-list request has an independent timeout, so one stalled endpoint cannot block the whole catalog.
 
 ```bash
-dsh plugin --profile web add https://github.com/Wanbinyu/dsh-provider-probe/releases/download/v0.3.4/dsh-provider-probe-0.3.4.tgz
+dsh plugin --profile web add https://github.com/Wanbinyu/dsh-provider-probe/releases/download/v0.3.5/dsh-provider-probe-0.3.5.tgz
 ```
 
 Restart after installation or update:

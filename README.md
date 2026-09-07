@@ -25,10 +25,10 @@
 ## 安装
 
 要求 Node.js `>=22.19` 和 DeepSeek Harness `0.1.0-rc.6` 或更高版本。
-`v0.3.4` 已使用 DeepSeek Harness `0.1.2-rc.1` 完成类型、测试、构建和打包验证，并保留 `0.1.0-rc.6` 至 `rc.8`、`0.1.1-rc.1` 至 `rc.2` 的兼容分支。每个供应商的模型列表读取均有独立超时，单个接口卡住不会阻塞整个目录。
+`v0.3.5` 已使用 DeepSeek Harness `0.1.2-rc.1` 完成类型、测试、构建和打包验证，并保留 `0.1.0-rc.6` 至 `rc.8`、`0.1.1-rc.1` 至 `rc.2` 的兼容分支。每个供应商的模型列表读取均有独立超时，单个接口卡住不会阻塞整个目录。
 
 ```bash
-dsh plugin --profile web add https://github.com/Wanbinyu/dsh-provider-probe/releases/download/v0.3.4/dsh-provider-probe-0.3.4.tgz
+dsh plugin --profile web add https://github.com/Wanbinyu/dsh-provider-probe/releases/download/v0.3.5/dsh-provider-probe-0.3.5.tgz
 ```
 
 安装或更新后重启：

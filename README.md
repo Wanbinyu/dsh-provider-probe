@@ -1,6 +1,6 @@
 # dsh-provider-probe
 
-> **源码兼容性修复（2026-09-11，尚未发布）**：当前源码已适配 Harness `0.1.5-rc.2`，并通过 `0.1.1-rc.2` 基线回归。Web 插件不再请求已移除的 `@deepseek-ai/dsh-client-runtime/client`；Companion 改用独立 Store 引擎，并兼容新版等待交互状态；计费投影兼容新版最终用量事件。本次没有发布 npm 包、Release 或新安装包。下面的 Release 下载链接仍是旧构建，不能用于验证新版宿主修复；使用 `0.1.5` 时请从当前源码执行 `npm ci && npm run verify`，再本地 `npm pack` 后安装。不要把源码兼容性当成旧下载包的兼容性。
+> **v0.3.6 兼容性修复**：适配 Harness `0.1.5-rc.2`，并通过 `0.1.1-rc.2` 回归。修复旧 runtime 模块缺失问题；下方下载链接指向本次修复包。其他宿主版本请先验证兼容性。
 
 
 [English](README.en.md) | 简体中文
@@ -28,10 +28,10 @@
 ## 安装
 
 要求 Node.js `>=22.19` 和 DeepSeek Harness `0.1.0-rc.6` 或更高版本。
-`v0.3.5` 已使用 DeepSeek Harness `0.1.2-rc.1` 完成类型、测试、构建和打包验证，并保留 `0.1.0-rc.6` 至 `rc.8`、`0.1.1-rc.1` 至 `rc.2` 的兼容分支。每个供应商的模型列表读取均有独立超时，单个接口卡住不会阻塞整个目录。
+`v0.3.6` 已使用 DeepSeek Harness `0.1.2-rc.1` 完成类型、测试、构建和打包验证，并保留 `0.1.0-rc.6` 至 `rc.8`、`0.1.1-rc.1` 至 `rc.2` 的兼容分支。每个供应商的模型列表读取均有独立超时，单个接口卡住不会阻塞整个目录。
 
 ```bash
-dsh plugin --profile web add https://github.com/Wanbinyu/dsh-provider-probe/releases/download/v0.3.5/dsh-provider-probe-0.3.5.tgz
+dsh plugin --profile web add https://github.com/Wanbinyu/dsh-provider-probe/releases/download/v0.3.6/dsh-provider-probe-0.3.6.tgz
 ```
 
 安装或更新后重启：

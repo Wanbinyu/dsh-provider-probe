@@ -14,11 +14,11 @@ export { buildDiagnosticReport } from './report.ts'
 export const name = 'provider-probe'
 export const inject = ['llm']
 
-export const Config: z<ProviderProbeConfig> = z.object({
+export const Config = z.object({
   timeoutMs: z.number().min(1000).max(120000).default(20000),
   maxTokens: z.number().min(1).max(32).default(8),
   maxMessageLength: z.number().min(256).max(8000).default(1200),
-})
+}) as unknown as z<ProviderProbeConfig>
 
 export class ProviderProbeGateway extends TypertRemoteService {
   private readonly runner: ProbeRunner

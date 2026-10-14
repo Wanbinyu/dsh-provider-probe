@@ -1,5 +1,6 @@
 import type {
   RemoteResult,
+  TypertCodec,
   TypertRemoteContribution,
 } from '@deepseek-ai/dsh-typert-protocol'
 import { ProbeCatalogCodec, ProbeRequestCodec, ProbeResultCodec } from './remote-codecs.ts'
@@ -19,6 +20,16 @@ declare module '@deepseek-ai/dsh-typert-protocol' {
   }
 }
 
+function strictCodec(typeSymbol: string, schema: { parse(value: unknown): unknown }): TypertCodec {
+  // 0.1 hosts read `schema`. 0.2 hosts call `create()`. Keep both.
+  return {
+    mode: 'strict',
+    typeSymbol,
+    schema,
+    create: () => schema,
+  } as unknown as TypertCodec
+}
+
 export const TYPERT_REMOTE: TypertRemoteContribution = {
   package: 'dsh-provider-probe',
   descriptors: [
@@ -29,11 +40,7 @@ export const TYPERT_REMOTE: TypertRemoteContribution = {
       method: 'catalog',
       invocation: { kind: 'direct' },
       parameters: [],
-      result: {
-        mode: 'strict',
-        typeSymbol: 'dsh-provider-probe/types#ProbeCatalog',
-        schema: ProbeCatalogCodec,
-      },
+      result: strictCodec('dsh-provider-probe/types#ProbeCatalog', ProbeCatalogCodec),
     },
     {
       id: 'dsh-provider-probe#providerProbe/probe',
@@ -46,19 +53,11 @@ export const TYPERT_REMOTE: TypertRemoteContribution = {
           name: 'request',
           wire: 'request',
           source: 'json',
-          codec: {
-            mode: 'strict',
-            typeSymbol: 'dsh-provider-probe/types#ProbeRequest',
-            schema: ProbeRequestCodec,
-          },
+          codec: strictCodec('dsh-provider-probe/types#ProbeRequest', ProbeRequestCodec),
         },
       ],
       cancellation: { parameter: 'signal' },
-      result: {
-        mode: 'strict',
-        typeSymbol: 'dsh-provider-probe/types#ProbeResult',
-        schema: ProbeResultCodec,
-      },
+      result: strictCodec('dsh-provider-probe/types#ProbeResult', ProbeResultCodec),
     },
   ],
 }

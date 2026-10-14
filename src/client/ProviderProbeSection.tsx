@@ -8,17 +8,19 @@ import {
   type ProbeResult,
 } from '../client.ts'
 import {
-  IconCheckOutline16,
-  IconCopyOutline16,
-  IconPlayOutline16,
-  IconRefreshOutline16,
-  IconStopFill16,
   Tooltip,
   writeClipboard,
 } from '@deepseek-ai/dsh-client-ui-primitives'
+import { hostIcon } from './hostIcon.ts'
 import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
 import type { ProviderProbeKey } from './locales.ts'
 import css from './ProviderProbeSection.module.css'
+
+const IconCheckOutline = hostIcon('IconCheckOutlineMedium', 'IconCheckOutline16')
+const IconCopyOutline = hostIcon('IconCopyOutlineMedium', 'IconCopyOutline16')
+const IconPlayOutline = hostIcon('IconPlayOutlineMedium', 'IconPlayOutline16')
+const IconRefreshOutline = hostIcon('IconRefreshOutlineMedium', 'IconRefreshOutline16')
+const IconStopFill = hostIcon('IconStopFillMedium', 'IconStopFill16')
 
 export interface ProviderProbeSectionInjected {
   catalog: () => Promise<ProbeCatalog>
@@ -170,7 +172,7 @@ export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSection
             disabled={running}
             onClick={refresh}
           >
-            <IconRefreshOutline16 size={16} />
+            <IconRefreshOutline size={16} />
           </button>
         </Tooltip>
       </header>
@@ -246,7 +248,7 @@ export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSection
           <div className={css.actions}>
             {running ? (
               <button type="button" className={css.secondaryButton} onClick={() => { abortRef.current?.abort() }}>
-                <IconStopFill16 size={16} aria-hidden="true" />
+                <IconStopFill size={16} aria-hidden="true" />
                 {t('cancel')}
               </button>
             ) : (
@@ -256,7 +258,7 @@ export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSection
                 disabled={provider.length === 0 || model.trim().length === 0}
                 onClick={() => { void run() }}
               >
-                <IconPlayOutline16 size={16} aria-hidden="true" />
+                <IconPlayOutline size={16} aria-hidden="true" />
                 {t('run')}
               </button>
             )}
@@ -279,8 +281,8 @@ export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSection
                 onClick={() => { void copyDiagnostic() }}
               >
                 {copyState === 'copied'
-                  ? <IconCheckOutline16 size={16} aria-hidden="true" />
-                  : <IconCopyOutline16 size={16} aria-hidden="true" />}
+                  ? <IconCheckOutline size={16} aria-hidden="true" />
+                  : <IconCopyOutline size={16} aria-hidden="true" />}
                 {t(copyState === 'copied'
                   ? 'copied'
                   : copyState === 'failed' ? 'copyFailed' : 'copyDiagnostic')}

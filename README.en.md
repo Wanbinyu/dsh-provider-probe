@@ -1,6 +1,6 @@
 # dsh-provider-probe
 
-> **v0.3.6 compatibility update**: verified against Harness `0.1.5-rc.2` and the `0.1.1-rc.2` baseline. Web plugins no longer request the retired runtime module. Download links below target the fixed archive; other host versions require verification.
+> **v0.3.7 compatibility update**: Typechecked and tested against Harness `0.2.1-alpha.3`. Peer ranges also accept `0.2.0-rc.2`, `0.1.5-rc.2`, and the `0.1.1-rc.2` baseline.
 
 
 English | [简体中文](README.md)
@@ -28,10 +28,10 @@ Manual, low-cost model-provider connectivity checks for DeepSeek Harness Web. It
 ## Install
 
 Requires Node.js `>=22.19` and DeepSeek Harness `0.1.0-rc.6` or later.
-`v0.3.6` is type-checked, tested, built, and package-validated against DeepSeek Harness `0.1.2-rc.1` while retaining compatibility with `0.1.0-rc.6` through `rc.8` and `0.1.1-rc.1` through `rc.2`. Each provider model-list request has an independent timeout, so one stalled endpoint cannot block the whole catalog.
+`v0.3.7` was typechecked and tested against Harness `0.2.1-alpha.3`. Peer ranges also accept `0.2.0-rc.2`, `0.1.5-rc.2`, and the `0.1.1-rc.2` baseline. Each provider model-list request has an independent timeout, so one stalled endpoint cannot block the whole catalog.
 
 ```bash
-dsh plugin --profile web add https://github.com/Wanbinyu/dsh-provider-probe/releases/download/v0.3.6/dsh-provider-probe-0.3.6.tgz
+dsh plugin --profile web add https://github.com/Wanbinyu/dsh-provider-probe/releases/download/v0.3.7/dsh-provider-probe-0.3.7.tgz
 ```
 
 Restart after installation or update:

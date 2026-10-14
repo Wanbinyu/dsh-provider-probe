@@ -4,6 +4,7 @@ import {
   type LlmRuntime,
   type StreamChunk,
   type TokenUsage,
+  type UserMessage,
 } from '@deepseek-ai/dsh-llm'
 import { classifyProbeFailure } from './failure.ts'
 import { redactMessage } from './redact.ts'
@@ -196,7 +197,10 @@ export class ProbeRunner {
         model: normalized.model,
         messages: [createUserMessage({
           content: [{ type: 'text', text: 'Reply with OK.' }],
-          source: { kind: 'plugin', plugin: 'dsh-provider-probe' },
+          source: {
+            kind: 'plugin',
+            plugin: 'dsh-provider-probe',
+          } as unknown as UserMessage['source'],
         })],
         system: 'This is a connectivity check. Reply only with OK.',
         maxTokens: this.config.maxTokens,

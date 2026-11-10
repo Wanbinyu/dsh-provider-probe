@@ -106,20 +106,22 @@
   "devDependencies": {
     "@deepseek-ai/cordis": "4.0.2",
     "@deepseek-ai/dsh-api-gateway": "0.2.1-alpha.3",
+    "@deepseek-ai/dsh-api-session-controller": "0.2.1-alpha.3",
     "@deepseek-ai/dsh-client-locale": "0.2.1-alpha.3",
     "@deepseek-ai/dsh-client-ui-primitives": "0.2.1-alpha.3",
+    "@deepseek-ai/dsh-client-ui-renderer": "0.2.1-alpha.3",
+    "@deepseek-ai/dsh-client-ui-session": "0.2.1-alpha.3",
     "@deepseek-ai/dsh-client-ui-settings": "0.2.1-alpha.3",
     "@deepseek-ai/dsh-client-ui-slots": "0.2.1-alpha.3",
     "@deepseek-ai/dsh-llm": "0.2.1-alpha.3",
     "@deepseek-ai/dsh-typert-protocol": "0.2.1-alpha.3",
     "@types/node": "^22.20.0",
     "@types/react": "^18.3.12",
+    "@types/react-test-renderer": "18.3.1",
     "lightningcss": "^1.33.0",
+    "react-test-renderer": "18.3.1",
     "tsdown": "^0.20.3",
     "typescript": "5.9.3",
-    "vitest": "^4.1.8",
-    "@deepseek-ai/dsh-client-ui-renderer": "0.2.1-alpha.3",
-    "@deepseek-ai/dsh-client-ui-session": "0.2.1-alpha.3",
-    "@deepseek-ai/dsh-api-session-controller": "0.2.1-alpha.3"
+    "vitest": "^4.1.8"
   }
 }

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Preserve an intentionally cleared model ID, including after catalog refresh. Default models are selected only when choosing or replacing a provider.
+- Add component regression coverage for model clearing, custom input, provider switching, and catalog refresh.
+
 ## 0.3.7 - 2026-10-15
 
 - Adapt to Harness 0.2.1-alpha.3. Peer ranges also accept 0.2.0-rc.2, 0.1.5-rc.2, and the 0.1.1-rc.2 baseline.

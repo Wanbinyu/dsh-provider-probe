@@ -107,9 +107,11 @@ export function ProviderProbeSection({ catalog, probe, t }: ProviderProbeSection
       setModel('')
       return
     }
-    if (nextProvider.id !== provider) setProvider(nextProvider.id)
-    if (nextProvider.id !== provider || model.length === 0) setModel(nextProvider.models[0]?.id ?? '')
-  }, [catalogState, model.length, provider])
+    if (nextProvider.id !== provider) {
+      setProvider(nextProvider.id)
+      setModel(nextProvider.models[0]?.id ?? '')
+    }
+  }, [catalogState, provider])
 
   useEffect(() => () => { abortRef.current?.abort() }, [])
 
